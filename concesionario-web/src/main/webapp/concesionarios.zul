@@ -1,0 +1,124 @@
+<?page title="Concesionarios" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/WEB-INF/plantillas/base.zul"?>
+
+<zk>
+	<include self="@{define(menu)}" src="/WEB-INF/plantillas/menu.zul" />
+
+	<window self="@{define(contenido)} }" title="Gestión de Concesionarios"
+		border="normal" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('es.uvigo.mei.concesionario.vista.ConcesionarioVM')"
+		vflex="1" validationMessages="@id('vmsgs')">
+
+		<groupbox mold="3d" closable="false">
+			<caption label="Buscador de concesionarios">
+				<hlayout hflex="min">
+					<textbox width="350px"
+						value="@bind(vm.textoBusqueda)" />
+
+					<button label="Buscar ID"
+						onClick="@command('buscarID')" />
+					<button label="Buscar Nombre"
+						onClick="@command('buscarNombre')" />
+					<button label="Buscar Descripción"
+						onClick="@command('buscarDescripcion')" />
+					<button label="Buscar Dirección"
+						onClick="@command('buscarDireccion')" />
+					<button label="Ver todos"
+						onClick="@command('buscarTodos')" />
+
+					<space width="50px" />
+
+					<button label="Nuevo concesionario"
+						onClick="@command('nuevoConcesionario')" />
+
+				</hlayout>
+			</caption>
+
+			<listbox model=" @load(vm.concesionarios)"
+				emptyMessage="No hay concesionarios que mostrar" rows="5"
+				sizedByContent="true" span="true">
+				<listhead>
+					<listheader label="ID" />
+					<listheader label="Nombre" />
+					<listheader label="Descripción" />
+					<listheader label="Dirección" />
+				</listhead>
+				<template name="model" var="concesionario">
+					<listitem>
+						<listcell>
+							<label value="@bind(concesionario.id)" />
+						</listcell>
+						<listcell>
+							<label value="@bind(concesionario.nombre)" />
+						</listcell>
+						<listcell>
+							<label value="@bind(concesionario.descripcion)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(concesionario.direccion)" />
+						</listcell>
+							<hlayout>
+								<button label="Editar"
+									onClick="@command('editar', concesionarioEditar=concesionario)" />
+								<button label="Eliminar"
+									onClick="@command('eliminar', concesionarioEliminar=concesionario)" />
+							</hlayout>
+						</listcell>
+					</listitem>
+				</template>
+			</listbox>
+		</groupbox>
+		<separator />
+
+		<window title="Editor de concesionarios" mode="modal" closable="true"
+			border="normal" position="center"
+			onClose="self.setVisible(false); event.stopPropagation()"
+			form="@id('concesionario') @load(vm.concesionarioActual) @save(vm.concesionarioActual, before='guardarConcesionario')"
+			visible="@load(not empty vm.concesionarioActual)">
+			<tabbox>
+				<tabs id="tabs">
+					<tab label="Detalles concesionario" />
+					<tab label="Stock modelos" />
+				</tabs>
+				<tabpanels>
+					<tabpanel>
+						<grid hflex="min">
+							<rows>
+								<row>
+									<label value="ID:" />
+									<label value="@load(concesionario.id)" />
+								</row>
+								<row>
+									<label value="Nombre:" />
+									<textbox
+										value="@bind(concesionario.nombre)" width="450px" />
+								</row>
+								<row>
+									<label value="Descripción:" />
+									<textbox
+										value="@bind(concesionario.descripcion)" width="450px" />
+								</row>
+								<row>
+									<label value="Dirección:" />
+									<textbox
+										value="@bind(concesionario.direccion)" width="450px" />
+								</row>
+							</rows>
+						</grid>
+						<hlayout>
+							<button label="Guardar"
+								disabled="@load(not concesionarioStatus.dirty)"
+								onClick="@command('guardarConcesionario')" />
+
+							<button label="Cancelar"
+								onClick="@command('cancelarEdicion')" />
+						</hlayout>
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</window>
+
+		
+	</window>
+</zk>

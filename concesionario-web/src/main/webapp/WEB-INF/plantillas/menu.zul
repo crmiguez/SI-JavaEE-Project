@@ -1,0 +1,8 @@
+<toolbar orient="vertical">
+	<toolbarbutton label="Clientes" href="/clientes.zul" />
+	<toolbarbutton label="Marcas" href="/marcas.zul" />
+	<toolbarbutton label="Pedidos" href="/pedidos.zul" />
+	<toolbarbutton label="Concesionarios" href="/concesionarios.zul" />
+	<separator />
+	<toolbarbutton label="Principal" href="/index.zul" />
+</toolbar>

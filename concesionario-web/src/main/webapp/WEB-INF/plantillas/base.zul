@@ -1,0 +1,17 @@
+<zk>
+	<borderlayout >
+		<north vflex="min">
+			<include src="/WEB-INF/plantillas/cabecera.zul" />
+		</north>
+		<west width="150px" collapsible="true" vflex="min"
+			title="Opciones">
+			<div self="@{insert(menu)}"></div>
+		</west>
+		<center  autoscroll="true">
+			<div self="@{insert(contenido)}"></div>
+		</center>
+		<south vflex="min">
+			<include src="/WEB-INF/plantillas/pie.zul" />
+		</south>
+	</borderlayout>
+</zk>

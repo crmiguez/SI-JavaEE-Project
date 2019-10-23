@@ -1,0 +1,3 @@
+<vlayout>
+    <label value="Versión ZK: ${desktop.webApp.version}" />
+</vlayout>

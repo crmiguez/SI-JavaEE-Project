@@ -1,0 +1,11 @@
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/WEB-INF/plantillas/base.zul"?>
+
+<zk>
+	<include self="@{define(menu)}" src="/WEB-INF/plantillas/menu.zul" />
+
+	<window self="@{define(contenido)} }" title="Página principal"
+		border="normal">
+
+		
+	</window>
+</zk>

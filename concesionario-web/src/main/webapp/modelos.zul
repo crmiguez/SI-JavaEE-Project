@@ -1,0 +1,140 @@
+<?page title="Gestión de Modelos" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/WEB-INF/plantillas/base.zul"?>
+<zk>
+	<include self="@{define(menu)}" src="/WEB-INF/plantillas/menu.zul" />
+
+	<window self="@{define(contenido)} }" title="Gestión de Modelos"
+		border="normal" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('es.uvigo.mei.concesionario.vista.ModeloVM')"
+		vflex="1" validationMessages="@id('vmsgs')">
+		
+		<groupbox mold="3d" closable="false">
+			<caption label="Buscador de modelos">
+				<hlayout>
+					<vlayout>
+						<hlayout>
+							<textbox width="350px"
+								value="@bind(vm.textoBusqueda)" />
+
+							<button label="Buscar ID"
+								onClick="@command('buscarID')" />
+							<button label="Buscar Nombre"
+								onClick="@command('buscarNombre')" />
+						</hlayout>
+						<hlayout>
+							<label value="Tipo Modelo:" />
+							<listbox mold="select"
+								model="@load(vm.tipomodelos)"
+								selectedItem="@bind(vm.tipoModeloSeleccionado)">
+								<template name="model" var="tipomodelo">
+									<listitem
+										label="@load(c:cat4(tipomodelo.nombre, ' [', tipomodelo.descripcion, ']'))"
+										value="@bind(tipomodelo)" />
+								</template>
+							</listbox>
+							<button label="Buscar Tipo Modelo"
+								onClick="@command('buscarTipoModelo')" />
+						</hlayout>
+					</vlayout>
+					<button label="Ver todos"
+						onClick="@command('buscarTodos')" />
+
+					<space width="50px" />
+
+					<button label="Nuevo modelo"
+						onClick="@command('nuevoModelo')" />
+
+				</hlayout>
+			</caption>
+
+			<listbox model=" @load(vm.articulos)"
+				emptyMessage="No hay artículos que mostrar" rows="5"
+				sizedByContent="true" span="true">
+				<listhead>
+					<listheader label="ID" />
+					<listheader label="Nombre" />
+					<listheader label="Descripción" />
+					<listheader label="Tipo Modelo" />
+				</listhead>
+				<template name="model" var="modelo">
+					<listitem>
+						<listcell>
+							<label value="@bind(modelo.id)" />
+						</listcell>
+						<listcell>
+							<label value="@bind(modelo.nombre)" />
+						</listcell>
+						<listcell>
+							<label value="@bind(modelo.descripcion)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(modelo.tipomodelo.nombre)" />
+						</listcell>
+						<listcell>
+							<hlayout>
+								<button label="Editar"
+									onClick="@command('editar', modeloEditar=modelo)" />
+								<button label="Eliminar"
+									onClick="@command('eliminar', modeloEliminar=modelo)" />
+							</hlayout>
+						</listcell>
+					</listitem>
+				</template>
+			</listbox>
+		</groupbox>
+		<separator />
+
+		<window title="Editor de modelos" mode="modal" closable="true"
+			border="normal" position="center"
+			onClose="self.setVisible(false); event.stopPropagation()"
+			form="@id('modelo') @load(vm.modeloActual) @save(vm.modeloActual, before='guardarModelo')"
+			visible="@load(not empty vm.modeloActual)">
+			<hlayout>
+				<vlayout>
+					<grid hflex="min">
+						<rows>
+							<row>
+								<label value="ID:" />
+								<label value="@load(modelo.id)" />
+							</row>
+							<row>
+								<label value="Nombre:" />
+								<textbox value="@bind(modelo.nombre)"
+									width="450px" constraint="no empty" />
+							</row>
+							<row>
+								<label value="Descripción" />
+								<textbox
+									value="@bind(modelo.descripcion)" width="450px" />
+							</row>
+							<row>
+								<label value="Tipo Modelo:" />
+								<listbox mold="select"
+									model="@load(vm.tipomodelos)"
+									selectedItem="@bind(modelo.tipomodelo)">
+									<template name="model"
+										var="tipomodelo">
+										<listitem
+											label="@load(c:cat4(tipomodelo.nombre, ' [', tipomodelo.descripcion, ']'))"
+											value="@bind(tipomodelo)" />
+									</template>
+								</listbox>
+							</row>
+						</rows>
+					</grid>
+					<hlayout>
+						<button label="Guardar"
+							disabled="@load(not modeloStatus.dirty)"
+							onClick="@command('guardarModelo')" />
+
+						<button label="Cancelar"
+							onClick="@command('cancelarEdicion')" />
+					</hlayout>
+				</vlayout>
+			</hlayout>
+		</window>
+
+	</window>
+
+</zk>

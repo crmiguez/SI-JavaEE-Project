@@ -1,0 +1,144 @@
+<?page title="Gestión Clientes" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/WEB-INF/plantillas/base.zul"?>
+
+<zk>
+	<include self="@{define(menu)}" src="/WEB-INF/plantillas/menu.zul" />
+
+	<window self="@{define(contenido)} }" title="Gestión de Clientes"
+		border="normal" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('es.uvigo.mei.concesionario.vista.ClienteVM')"
+		vflex="1" validationMessages="@id('vmsgs')">
+
+		<groupbox mold="3d" closable="false">
+			<caption label="Buscador de clientes">
+				<hlayout hflex="min">
+					<textbox width="350px"
+						value="@bind(vm.textoBusqueda)" />
+
+					<button label="Buscar DNI"
+						onClick="@command('buscarDNI')" />
+					<button label="Buscar Nombre"
+						onClick="@command('buscarNombre')" />
+					<button label="Buscar Localidad"
+						onClick="@command('buscarLocalidad')" />
+					<button label="Ver todos"
+						onClick="@command('buscarTodos')" />
+
+					<space width="50px"/>
+					
+					<button label="Nuevo cliente"
+						onClick="@command('nuevoCliente')" />
+
+				</hlayout>
+			</caption>
+
+			<listbox model=" @load(vm.clientes)"
+				emptyMessage="No hay clientes que mostrar" rows="5"
+				sizedByContent="true" span="true">
+				<listhead>
+					<listheader label="DNI" />
+					<listheader label="Nombre" />
+					<listheader label="Domicilio" />
+					<listheader label="Localidad" />
+					<listheader label="Provincia" />
+					<listheader label="Cod. Postal" />
+					<listheader label="Teléfono" />
+					<listheader hflex="min" />
+				</listhead>
+				<template name="model" var="cliente">
+					<listitem>
+						<listcell>
+							<label value="@bind(cliente.DNI)" />
+						</listcell>
+						<listcell>
+							<label value="@bind(cliente.nombre)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(cliente.direccion.domicilio)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(cliente.direccion.localidad)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(cliente.direccion.provincia)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(cliente.direccion.codigoPostal)" />
+						</listcell>
+						<listcell>
+							<label
+								value="@bind(cliente.direccion.telefono)" />
+						</listcell>
+						<listcell>
+							<hlayout>
+								<button label="Editar"
+									onClick="@command('editar', clienteEditar=cliente)" />
+								<button label="Eliminar"
+									onClick="@command('eliminar', clienteEliminar=cliente)" />
+							</hlayout>
+						</listcell>
+					</listitem>
+				</template>
+			</listbox>
+		</groupbox>
+		<separator />
+
+		<window title="Editor de clientes" mode="modal" closable="true"
+			border="normal" position="center"
+			onClose="self.setVisible(false); event.stopPropagation()"
+			form="@id('cliente') @load(vm.clienteActual) @save(vm.clienteActual, before='guardarCliente')"
+			visible="@load(not empty vm.clienteActual)">
+			<grid hflex="min">
+				<rows>
+					<row>
+						<label value="DNI:" />
+						<textbox value="@bind(cliente.DNI)" width="250px" constraint="no empty: Debe indicarse un DNI" />
+					</row>
+					<row>
+						<label value="Nombre:" />
+						<textbox value="@bind(cliente.nombre)"	width="450px" />
+					</row>
+					<row>
+						<label value="Domicilio:" />
+						<textbox
+							value="@bind(cliente.direccion.domicilio)" width="450px" />
+					</row>
+					<row>
+						<label value="Localidad:" />
+						<textbox
+							value="@bind(cliente.direccion.localidad)" width="350px" />
+					</row>
+					<row>
+						<label value="Cod. Postal:" />
+						<textbox
+							value="@bind(cliente.direccion.codigoPostal)" width="150px" constraint="/[0-9]{5}/: Formato incorrecto (se exigen 5 dígitos)"/>
+					</row>
+					<row>
+						<label value="Provincia:" />
+						<textbox
+							value="@bind(cliente.direccion.provincia)" width="350px" />
+					</row>
+					<row>
+						<label value="Telefono:" />
+						<textbox
+							value="@bind(cliente.direccion.telefono)" width="250px" constraint="/[0-9]{9}/: Formato incorrecto (se exigen 9 dígitos)"/>
+					</row>
+				</rows>
+			</grid>
+			<hlayout>
+				<button label="Guardar"
+					disabled="@load(not clienteStatus.dirty)"
+					onClick="@command('guardarCliente')" />
+
+				<button label="Cancelar"
+					onClick="@command('cancelarEdicion')" />
+			</hlayout>
+		</window>
+
+		
+	</window>
+</zk>
